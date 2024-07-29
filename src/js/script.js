@@ -1,10 +1,11 @@
 const fieldElm = document.querySelector(".field");
 const gameOverWindowElm = document.querySelector(".game-over");
-const restartBtnElm = document.querySelector(".restart-btn");
+const restartBtnElm = document.querySelectorAll(".restart-btn");
+const winWindowElm = document.querySelector(".win");
 
 let rows = 10;
 let columns = 10;
-let bombs = 10;
+let bombs = 5;
 
 class Game {
   constructor(rows, cols, bombs) {
@@ -79,6 +80,9 @@ class Game {
       .querySelector(`[data-row="${row}"]`)
       .querySelector(`[data-col="${col}"]`);
     const fieldSquareContentElm = fieldSquare.querySelector(".square-content");
+    if (fieldSquare.querySelector("img")) {
+      fieldSquare.querySelector("img").remove();
+    }
     if (![...fieldSquareContentElm.classList].includes("hidden")) return;
 
     fieldSquareContentElm.classList.remove("hidden");
@@ -102,6 +106,20 @@ class Game {
       }
     }
   }
+
+  checkIfWon() {
+    const hiddenSquares = fieldElm.querySelectorAll(".hidden");
+    if (hiddenSquares.length > this.bombs) return;
+    for (const el of [...hiddenSquares]) {
+      if (el.dataset.content !== "*") return;
+    }
+
+    fieldElm.classList.add("disable-clicks");
+
+    setTimeout(() => {
+      winWindowElm.classList.remove("hidden");
+    }, 1000);
+  }
 }
 
 function randomNumBetween(minNum, maxNum) {
@@ -109,19 +127,42 @@ function randomNumBetween(minNum, maxNum) {
 }
 
 fieldElm.addEventListener("click", (e) => {
-  if (!(e.target.classList.value === "square")) return;
+  if (!(e.target.classList.value === "square") || e.target.dataset.bomb) return;
   const squareContentElm = e.target.querySelector("div");
 
   const row = squareContentElm.parentElement.parentElement.dataset.row;
   const col = squareContentElm.parentElement.dataset.col;
   gameInstance.openSqare(+row, +col);
+  gameInstance.checkIfWon();
 });
 
-restartBtnElm.addEventListener("click", () => {
-  fieldElm.innerHTML = "";
-  gameInstance = new Game(rows, columns, bombs);
-  gameOverWindowElm.classList.add("hidden");
-  fieldElm.classList.remove("disable-clicks");
+fieldElm.addEventListener("contextmenu", (e) => {
+  e.preventDefault();
+  const squareElm = e.target.closest(".square");
+  if (!squareElm.querySelector(".hidden")) return;
+
+  if (!squareElm.dataset.bomb) {
+    squareElm.dataset.bomb = 1;
+    const flagImgElm = document.createElement("img");
+    flagImgElm.src = "./src/img/red-flag.webp";
+    flagImgElm.alt = "A red flag";
+    flagImgElm.style.width = "100%";
+    flagImgElm.classList = "flagged";
+    squareElm.appendChild(flagImgElm);
+  } else if (squareElm.dataset.bomb === "1") {
+    squareElm.querySelector("img").remove();
+    delete squareElm.dataset.bomb;
+  }
+});
+
+restartBtnElm.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    fieldElm.innerHTML = "";
+    gameInstance = new Game(rows, columns, bombs);
+    gameOverWindowElm.classList.add("hidden");
+    winWindowElm.classList.add("hidden");
+    fieldElm.classList.remove("disable-clicks");
+  });
 });
 
 let gameInstance = new Game(rows, columns, bombs);

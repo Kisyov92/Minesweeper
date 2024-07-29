@@ -30,6 +30,11 @@ body {
   height: 4rem;
   font-size: 2.8rem;
   background-color: #51cf66;
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .row:nth-child(odd) .square:nth-child(odd),
@@ -49,6 +54,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  cursor: default;
 }
 
 .row:nth-child(odd) .square:nth-child(odd) .square-content,
@@ -60,7 +66,8 @@ body {
   background-color: red;
 }
 
-.game-over {
+.game-over,
+.win {
   position: absolute;
 
   background-color: #d0ebff;
@@ -73,20 +80,29 @@ body {
   align-items: center;
 }
 
-.game-over h2 {
+.game-over h2,
+.win h2 {
   font-size: 3rem;
   margin-bottom: 2rem;
 }
 
-.game-over button {
+.win p {
+  font-size: 2rem;
+  margin-bottom: 4rem;
+}
+
+.game-over button,
+.win button {
   font-size: 2rem;
   background-color: #7fb6f8;
   border: none;
   border-radius: 10px;
   padding: 1rem 2rem;
   border: 1px solid #33333300;
+  cursor: pointer;
 }
 
+.win button:hover,
 .game-over button:hover {
   border: 1px solid #333;
 }
