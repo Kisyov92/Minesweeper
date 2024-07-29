@@ -7,3 +7,15 @@
 html {
   font-size: 62.5%;
 }
+
+.row {
+  display: flex;
+}
+
+.sqare {
+  width: 30px;
+  height: 30px;
+  background-color: #999;
+  margin: 3px;
+  font-size: 32px;
+}
