@@ -19,6 +19,36 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+
+.stats {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background-color: #138726;
+  padding: 1rem 2rem;
+  width: 100%;
+
+  font-size: 2rem;
+  color: #fff;
+}
+
+.stats > * {
+  width: 10rem;
+}
+
+.time,
+.flags {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.stats img {
+  width: 3.5rem;
 }
 
 .row {

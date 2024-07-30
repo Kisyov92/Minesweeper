@@ -10,8 +10,27 @@
   </head>
   <body>
     <section class="section-game">
-      <div id="game-board">
-        <div class="field"></div>
+      <div>
+        <div class="stats">
+          <div class="difficulty">
+            <select name="diff" id="diff">
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="easy">Easy</option>
+            </select>
+          </div>
+          <div class="time">
+            <img src="./src/img/clock.png" alt="A Clock" class="clock" />
+            <span class="timer">10:00</span>
+          </div>
+          <div class="flags">
+            <img src="./src/img/red-flag.webp" alt="A Red Flag" />
+            <span class="flag-counter">10</span>
+          </div>
+        </div>
+        <div id="game-board">
+          <div class="field"></div>
+        </div>
       </div>
       <div class="game-over hidden">
         <h2>Game over!</h2>

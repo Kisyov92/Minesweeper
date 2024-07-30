@@ -2,20 +2,62 @@ const fieldElm = document.querySelector(".field");
 const gameOverWindowElm = document.querySelector(".game-over");
 const restartBtnElm = document.querySelectorAll(".restart-btn");
 const winWindowElm = document.querySelector(".win");
+const flagCounterElm = document.querySelector(".flag-counter");
+const timerElm = document.querySelector(".timer");
+const clockImgElm = document.querySelector(".clock");
+
+let showClock = true;
 
 let rows = 10;
 let columns = 10;
-let bombs = 10;
+let bombs = 2;
 
 class Game {
   constructor(rows, cols, bombs) {
     this.rows = rows;
     this.cols = cols;
     this.bombs = bombs;
+    this.flags = bombs;
+    this.time = 0;
+    this.gameStarted = false;
     this.field = this.createField();
 
     this.placeMines();
     this.displayMineField();
+    this.displayStats();
+  }
+
+  startClock() {
+    this.gameStarted = true;
+    this.clock = setInterval(() => {
+      const time = ++this.time;
+      const hours = Math.floor(time / 60)
+        .toString()
+        .padStart(2, "0");
+      const mins = (time % 60).toString().padStart(2, "0");
+      console.log(hours, mins);
+      timerElm.textContent = `${hours}:${mins}`;
+    }, 1000);
+  }
+
+  stopClock() {
+    console.log(this.clock);
+    clearInterval(this.clock);
+  }
+
+  displayStats() {
+    flagCounterElm.textContent = this.flags;
+    timerElm.textContent = "00:00";
+  }
+
+  placeFlag() {
+    this.flags--;
+    flagCounterElm.textContent = this.flags;
+  }
+
+  removeFlag() {
+    this.flags++;
+    flagCounterElm.textContent = this.flags;
   }
 
   createField() {
@@ -115,6 +157,7 @@ class Game {
     }
 
     fieldElm.classList.add("disable-clicks");
+    this.stopClock();
 
     setTimeout(() => {
       winWindowElm.classList.remove("hidden");
@@ -130,6 +173,8 @@ fieldElm.addEventListener("click", (e) => {
   if (!(e.target.classList.value === "square") || e.target.dataset.bomb) return;
   const squareContentElm = e.target.querySelector("div");
 
+  if (!gameInstance.gameStarted) gameInstance.startClock();
+
   const row = squareContentElm.parentElement.parentElement.dataset.row;
   const col = squareContentElm.parentElement.dataset.col;
   gameInstance.openSqare(+row, +col);
@@ -141,6 +186,7 @@ fieldElm.addEventListener("click", (e) => {
     bombImgElm.alt = "A bomb";
     bombImgElm.style.width = "100%";
     e.target.appendChild(bombImgElm);
+    gameInstance.stopClock();
   }
 });
 
@@ -150,6 +196,7 @@ fieldElm.addEventListener("contextmenu", (e) => {
   if (!squareElm.querySelector(".hidden")) return;
 
   if (!squareElm.dataset.bomb) {
+    gameInstance.placeFlag();
     squareElm.dataset.bomb = 1;
     const flagImgElm = document.createElement("img");
     flagImgElm.src = "./src/img/red-flag.webp";
@@ -159,6 +206,7 @@ fieldElm.addEventListener("contextmenu", (e) => {
     squareElm.appendChild(flagImgElm);
   } else if (squareElm.dataset.bomb === "1") {
     squareElm.querySelector("img").remove();
+    gameInstance.removeFlag();
     delete squareElm.dataset.bomb;
   }
 });
@@ -171,6 +219,11 @@ restartBtnElm.forEach((btn) => {
     winWindowElm.classList.add("hidden");
     fieldElm.classList.remove("disable-clicks");
   });
+});
+
+clockImgElm.addEventListener("click", () => {
+  showClock = !showClock;
+  timerElm.classList.toggle("hidden");
 });
 
 let gameInstance = new Game(rows, columns, bombs);
