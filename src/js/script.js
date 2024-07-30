@@ -5,7 +5,7 @@ const winWindowElm = document.querySelector(".win");
 
 let rows = 10;
 let columns = 10;
-let bombs = 5;
+let bombs = 10;
 
 class Game {
   constructor(rows, cols, bombs) {
@@ -134,6 +134,14 @@ fieldElm.addEventListener("click", (e) => {
   const col = squareContentElm.parentElement.dataset.col;
   gameInstance.openSqare(+row, +col);
   gameInstance.checkIfWon();
+  if (squareContentElm.textContent === "*") {
+    e.target.innerHTML = "";
+    const bombImgElm = document.createElement("img");
+    bombImgElm.src = "./src/img/bomb.webp";
+    bombImgElm.alt = "A bomb";
+    bombImgElm.style.width = "100%";
+    e.target.appendChild(bombImgElm);
+  }
 });
 
 fieldElm.addEventListener("contextmenu", (e) => {
