@@ -229,6 +229,9 @@ function startGame() {
   if (difficulty === "normal") gameInstance = new Game(8, 8, 8);
   if (difficulty === "nightmare") gameInstance = new Game(12, 12, 40);
   if (difficulty === "hell") gameInstance = new Game(25, 15, 150);
+  gameOverWindowElm.classList.add("hidden");
+  winWindowElm.classList.add("hidden");
+  fieldElm.classList.remove("disable-clicks");
 }
 
 difficultyElm.addEventListener("change", (e) => {
