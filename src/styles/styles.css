@@ -28,7 +28,6 @@ body {
   align-items: center;
 
   background-color: #138726;
-  padding: 1rem 2rem;
   width: 100%;
 
   font-size: 2rem;
@@ -36,7 +35,7 @@ body {
 }
 
 .stats > * {
-  width: 10rem;
+  padding: 1rem;
 }
 
 .time,

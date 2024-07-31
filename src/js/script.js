@@ -5,12 +5,11 @@ const winWindowElm = document.querySelector(".win");
 const flagCounterElm = document.querySelector(".flag-counter");
 const timerElm = document.querySelector(".timer");
 const clockImgElm = document.querySelector(".clock");
+const difficultyElm = document.querySelector(".difficulty");
 
 let showClock = true;
-
-let rows = 10;
-let columns = 10;
-let bombs = 2;
+let difficulty = "easy";
+let gameInstance;
 
 class Game {
   constructor(rows, cols, bombs) {
@@ -35,13 +34,11 @@ class Game {
         .toString()
         .padStart(2, "0");
       const mins = (time % 60).toString().padStart(2, "0");
-      console.log(hours, mins);
       timerElm.textContent = `${hours}:${mins}`;
     }, 1000);
   }
 
   stopClock() {
-    console.log(this.clock);
     clearInterval(this.clock);
   }
 
@@ -74,25 +71,25 @@ class Game {
       const randomCol = randomNumBetween(0, this.cols - 1);
       const randomRow = randomNumBetween(0, this.rows - 1);
 
-      if (this.field[randomRow][randomCol] === "*") {
+      if (this.field[randomCol][randomRow] === "*") {
         i--;
         continue;
       }
 
-      this.field[randomRow][randomCol] = "*";
-      this.surroundMineWithNumbers(randomRow, randomCol);
+      this.field[randomCol][randomRow] = "*";
+      this.surroundMineWithNumbers(randomCol, randomRow);
     }
   }
 
   surroundMineWithNumbers(row, col) {
     const startRow = row - 1;
     const startCol = col - 1;
-    for (let i = startRow; i < startRow + 3; i++) {
-      if (i < 0 || i > 9) continue;
-      for (let j = startCol; j < startCol + 3; j++) {
-        if (j < 0 || j > 9) continue;
-        if (this.field[i][j] === "*") continue;
-        this.field[i][j]++;
+    for (let i = startCol; i < startCol + 3; i++) {
+      if (i < 0 || i > this.rows - 1) continue;
+      for (let j = startRow; j < startRow + 3; j++) {
+        if (j < 0 || j > this.cols - 1) continue;
+        if (this.field[j][i] === "*") continue;
+        this.field[j][i]++;
       }
     }
   }
@@ -140,11 +137,11 @@ class Game {
     }
 
     if (fieldSquareContentElm.dataset.content === "null") {
-      for (let i = row - 1; i < row + 2; i++) {
-        if (i < 0 || i > 9) continue;
-        for (let j = col - 1; j < col + 2; j++) {
-          if (j < 0 || j > 9) continue;
-          this.openSqare(i, j);
+      for (let i = col - 1; i < col + 2; i++) {
+        if (i < 0 || i > this.rows - 1) continue;
+        for (let j = row - 1; j < row + 2; j++) {
+          if (j < 0 || j > this.cols - 1) continue;
+          this.openSqare(j, i);
         }
       }
     }
@@ -215,7 +212,7 @@ fieldElm.addEventListener("contextmenu", (e) => {
 restartBtnElm.forEach((btn) => {
   btn.addEventListener("click", () => {
     fieldElm.innerHTML = "";
-    gameInstance = new Game(rows, columns, bombs);
+    startGame();
     gameOverWindowElm.classList.add("hidden");
     winWindowElm.classList.add("hidden");
     fieldElm.classList.remove("disable-clicks");
@@ -227,4 +224,18 @@ clockImgElm.addEventListener("click", () => {
   timerElm.classList.toggle("hidden");
 });
 
-let gameInstance = new Game(rows, columns, bombs);
+function startGame() {
+  if (difficulty === "easy") gameInstance = new Game(8, 8, 4);
+  if (difficulty === "normal") gameInstance = new Game(8, 8, 8);
+  if (difficulty === "nightmare") gameInstance = new Game(12, 12, 40);
+  if (difficulty === "hell") gameInstance = new Game(25, 15, 150);
+}
+
+difficultyElm.addEventListener("change", (e) => {
+  fieldElm.innerHTML = "";
+  gameInstance.stopClock();
+  difficulty = e.target.value;
+  startGame(difficulty);
+});
+
+startGame();
