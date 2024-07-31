@@ -10,6 +10,10 @@ html {
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  background: url("../img/background.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
 }
 
 .section-game {
@@ -38,10 +42,18 @@ body {
   padding: 1rem;
 }
 
+.time {
+  width: 30%;
+}
+
+.clock {
+  cursor: pointer;
+}
+
 .time,
 .flags {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   align-items: center;
   gap: 0.5rem;
 }
@@ -142,4 +154,32 @@ body {
 
 .disable-clicks {
   pointer-events: none;
+}
+
+.rules:link,
+.rules:visited {
+  position: absolute;
+  top: 5rem;
+  left: 5rem;
+
+  font-size: 3rem;
+  color: #333;
+  text-decoration: none;
+  background-color: #ffd8a8;
+  padding: 0.5rem 1rem;
+  border: 1px solid #333;
+  border-radius: 5px;
+  transition: all 0.3s;
+}
+
+.rules:hover,
+.rules:active {
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+#diff {
+  font-size: 1.8rem;
+}
+#diff option {
+  font-size: 1.8rem;
 }
