@@ -123,6 +123,7 @@ class Game {
       .querySelector(`[data-col="${col}"]`);
     const fieldSquareContentElm = fieldSquare.querySelector(".square-content");
     if (fieldSquare.querySelector("img")) {
+      gameInstance.removeFlag();
       fieldSquare.querySelector("img").remove();
     }
     if (![...fieldSquareContentElm.classList].includes("hidden")) return;
